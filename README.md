@@ -19,11 +19,13 @@
 - [x] React + Tailwind 기반 사용자 웹 인터페이스 구축
 - [ ] AI 요약 기능 (Gemini API 연동 예정)
 - [ ] 분석 진행 단계별 UI 표시 (진행중 / 완료 / 실패)
+- [ ] 관리자 페이지 로그 표시
+- [ ] 분석 유형별 결과 페이지
 - [ ] PDF 보고서 저장 기능
 
 ## 기술 스택
 
-- **Backend:** FastAPI, MongoDB, Celery (with Redis)
+- **Backend:** FastAPI, MongoDB
 - **Frontend:** React.js, Tailwind CSS
 - **Security Tools:** OWASP ZAP (API 사용), OSINT 기반 크롤러 자체 구현
 - **AI:** Gemini API (예정)
