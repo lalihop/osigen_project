@@ -91,7 +91,7 @@
     {% endif %}
   </div>
 
-  {% if subdomain_findings %}
+  {% if analysis_type == "full" %}
   <div class="section">
     <h2>🌐 서브도메인별 취약점 목록</h2>
     {% for entry in subdomain_findings %}

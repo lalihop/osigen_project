@@ -98,27 +98,6 @@ const SummaryTab = ({ data }) => {
 
       {/* 차트: 원형 + 막대 */}
       <div className="flex flex-col md:flex-row gap-6">
-        {/* PieChart */}
-        <div className="w-full md:w-1/3 bg-gray-100 p-4 rounded">
-          <h3 className="text-center font-semibold mb-2">심각도 분포</h3>
-          <ResponsiveContainer width="100%" height={220}>
-            <PieChart>
-              <Pie
-                data={severityChartData}
-                dataKey="value"
-                nameKey="name"
-                outerRadius={70}
-                label
-              >
-                {severityChartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
         {/* Top 5 유형 */}
         <div className="w-full md:w-2/3 bg-gray-100 p-4 rounded">
           <h3 className="text-center font-semibold mb-2">상위 취약점 유형</h3>
@@ -142,6 +121,27 @@ const SummaryTab = ({ data }) => {
                 ))}
               </Bar>
             </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* PieChart */}
+        <div className="w-full md:w-1/3 bg-gray-100 p-4 rounded">
+          <h3 className="text-center font-semibold mb-2">심각도 분포</h3>
+          <ResponsiveContainer width="100%" height={220}>
+            <PieChart>
+              <Pie
+                data={severityChartData}
+                dataKey="value"
+                nameKey="name"
+                outerRadius={70}
+                label
+              >
+                {severityChartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
           </ResponsiveContainer>
         </div>
       </div>

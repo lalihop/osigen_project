@@ -7,7 +7,7 @@ from database import task_collection, ai_collection
 from services.crawler.controller import run_all
 from services.zap_project.zap_scan import run_zap_scan
 import asyncio
-from routes.ai_summary import summarize_ai_result
+from services.ai_summary_runner import run_ai_summary
 from fastapi import Request
 from fastapi.responses import FileResponse
 from services.pdf_export import generate_pdf_report
@@ -83,13 +83,6 @@ async def crawl_and_scan(task_id: str, domain: str):
             except Exception as zap_error:
                 zap_results[sub] = [{"error": str(zap_error)}]
 
-        # ✅ AI 요약 자동 실행
-        try:
-            await summarize_ai_result(task_id)
-            print(f"[*] AI 요약 자동 생성 완료 (task_id: {task_id})")
-        except Exception as ai_error:
-            print(f"[!] AI 요약 자동 생성 실패 (task_id: {task_id}):", ai_error)
-
         await task_collection.update_one(
             {"_id": task_id},
             {"$set": {
@@ -100,6 +93,21 @@ async def crawl_and_scan(task_id: str, domain: str):
                 }
             }}
         )
+
+
+        # ✅ AI 요약 자동 실행
+        try:
+            print(f"[!] 요약 시작")
+            await run_ai_summary(task_id)
+            print(f"[*] AI 요약 자동 생성 완료 (task_id: {task_id})")
+        except Exception as ai_error:
+            print(f"[!] AI 요약 자동 생성 실패 (task_id: {task_id}):", ai_error)
+            await task_collection.update_one(
+                {"_id": task_id},
+                {"$set": {"ai_summary_id": None, "ai_summary_error": str(ai_error)}}
+            )
+
+
 
     except Exception as e:
         await task_collection.update_one(
@@ -118,13 +126,6 @@ async def quick_scan(task_id: str, target_url: str):
 
         zap_results[target_url] = await run_zap_scan(target_url, task_id)
 
-        # ✅ AI 요약 자동 실행
-        try:
-            await summarize_ai_result(task_id)
-            print(f"[*] AI 요약 자동 생성 완료 (task_id: {task_id})")
-        except Exception as ai_error:
-            print(f"[!] AI 요약 자동 생성 실패 (task_id: {task_id}):", ai_error)
-
         await task_collection.update_one(
             {"_id": task_id},
             {"$set": {
@@ -135,6 +136,20 @@ async def quick_scan(task_id: str, target_url: str):
                 }
             }}
         )
+
+        # ✅ AI 요약 자동 실행
+        try:
+            print(f"[!] 요약 시작")
+            await run_ai_summary(task_id)
+            print(f"[*] AI 요약 자동 생성 완료 (task_id: {task_id})")
+        except Exception as ai_error:
+            print(f"[!] AI 요약 자동 생성 실패 (task_id: {task_id}):", ai_error)
+            await task_collection.update_one(
+                {"_id": task_id},
+                {"$set": {"ai_summary_id": None, "ai_summary_error": str(ai_error)}}
+            )
+
+
 
 
 
@@ -226,3 +241,4 @@ async def export_pdf(task_id: str):
 
     generate_pdf_report(data, output_path)
     return FileResponse(path=output_path, filename=filename, media_type="application/pdf")
+
