@@ -9,9 +9,11 @@ from datetime import datetime, timedelta
 from fastapi import FastAPI
 from routes import analysis
 from database import db, admin_collection
+from routes import ai_summary
 
 app = FastAPI()
 app.include_router(analysis.router)
+app.include_router(ai_summary.router)
 
 # 비밀번호 해시 context 설정
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -37,13 +39,13 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-@app.get("/ping-db")
-async def ping_db():
-    try:
-        result = await db.command("ping")  # ping 명령어로 연결 확인
-        return JSONResponse(content={"status": "success", "mongo": result})
-    except Exception as e:
-        return JSONResponse(content={"status": "fail", "error": str(e)}, status_code=500)
+# @app.get("/ping-db")
+# async def ping_db():
+#     try:
+#         result = await db.command("ping")  # ping 명령어로 연결 확인
+#         return JSONResponse(content={"status": "success", "mongo": result})
+#     except Exception as e:
+#         return JSONResponse(content={"status": "fail", "error": str(e)}, status_code=500)
 
 # 전체 admin 컬렉션 조회
 @app.get("/get-admins")
@@ -59,46 +61,6 @@ async def get_admins():
         return JSONResponse(content={"status": "success", "data": admins})
     except Exception as e:
         return JSONResponse(content={"status": "fail", "error": str(e)}, status_code=500)
-
-# 로그인 API
-# @app.post("/login")
-# async def login(request: LoginRequest):
-#     username = "admin"
-#     user = await admin_collection.find_one({"username": username})
-
-#     if not user:
-#         raise HTTPException(status_code=401, detail="Admin account not found")
-
-#     is_correct = pwd_context.verify(request.password, user["password"])
-
-#     if not is_correct:
-#         raise HTTPException(status_code=401, detail="Incorrect password")
-
-#     return JSONResponse(content={"status": "success", "message": "Login successful"})
-
-# # 로그인: 세션 쿠키 발급
-# @app.post("/login")
-# async def login(request: Request, response: Response, credentials: LoginRequest):
-#     user = await admin_collection.find_one({"username": "admin"})
-#     if not user or not pwd_context.verify(credentials.password, user["password"]):
-#         raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-#     # 세션 쿠키 설정 (간단히 username만 넣기)
-#     response.set_cookie(key="session", value="admin", httponly=True)
-#     return {"message": "Login successful"}
-
-# # 인증된 관리자만 접근 가능
-# @app.get("/admin-only")
-# async def protected_route(session: str = Cookie(default=None)):
-#     if session != "admin":
-#         raise HTTPException(status_code=401, detail="Not authenticated")
-#     return {"message": "Welcome, Admin!"}
-
-# # 로그아웃 (쿠키 삭제)
-# @app.post("/logout")
-# async def logout(response: Response):
-#     response.delete_cookie(key="session")
-#     return {"message": "Logged out"}
 
 # 로그인 API → JWT 토큰 발급
 @app.post("/login")

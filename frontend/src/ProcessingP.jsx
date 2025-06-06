@@ -1,43 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'
-import './App.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import LoadingP from "./LoadingP";
+import LoadingP from './LoadingP';
 import LoadedP from './LoadedP';
 import FailedP from './FailedP';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 function ProcessingP() {
-    const { taskId } = useParams();
-    const navigate = useNavigate();
-    const [status, setStatus] = useState("processing");
-    const [type, setType] = useState("quick");
-  
-    useEffect(() => {
-      const params = new URLSearchParams(window.location.search);
-      const t = params.get("type");
-      setType(t || "quick");
-  
-      const interval = setInterval(() => {
-        axios.get(`http://localhost:8000/analyze/status/${taskId}`)
-          .then(res => {
-            const s = res.data.status;
-            if (s === "done" || s === "error") {
-              clearInterval(interval);
-              setStatus(s);
-            }
-          })
-          .catch(err => {
-            console.error("상태 조회 실패:", err);
-          });
-      }, 3000);  // 3초마다 확인
+  const { taskId } = useParams();
+  const [status, setStatus] = useState('processing');
+  const [stage, setStage] = useState('');
+  const [percent, setPercent] = useState(0);
+  const [type, setType] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!taskId) return;
+
+    const interval = setInterval(() => {
+      fetch(`http://localhost:8000/analyze/status/${taskId}`)
+        .then((res) => {
+          if (!res.ok) throw new Error("서버 응답 실패");
+          return res.json();
+        })
+        .then((data) => {
+          setStatus(data.status);
+          setStage(data.progress?.stage || '분석 준비 중...');
+          setPercent(data.progress?.percent || 0);
+          if (data.type) {
+            setType(data.type);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          clearInterval(interval);
+          setStatus('error');
+          setError("서버 연결 실패 또는 응답 오류");
+        });
+    }, 3000);
 
     return () => clearInterval(interval);
-    }, [taskId]);
+  }, [taskId]);
 
-    if (status === "processing") return <LoadingP />;
-    if (status === "done") return <LoadedP taskId={taskId} type={type} />;
-    if (status === "error") return <FailedP taskId={taskId} />;
-}   
+  if (status === 'done') return <LoadedP taskId={taskId} type={type} />;
+  if (status === 'error') return <FailedP message={error} />;
+  return <LoadingP progress={percent} stage={stage} />;
+}
 
 export default ProcessingP;

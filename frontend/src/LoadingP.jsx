@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import './App.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-function LoadingP() {
+function LoadingP({ progress = 0, stage = "분석 준비 중..."}) {
 
     return (
         <div className='min-w-screen min-h-screen bg-gray-50 flex flex-col items-center justify-center'>
@@ -14,7 +13,7 @@ function LoadingP() {
                         
                     </div>
                     <div className='flex justify-center flex-1'>
-                        <img src='logo.png' alt='' className='h-12'></img>
+                        <img src='/logo.png' alt='' className='h-12'></img>
                     </div>
                     <div className='flex justify-end flex-1'>
                         
@@ -24,9 +23,17 @@ function LoadingP() {
 
             {/* main */}
             <main className='flex-grow flex flex-col items-center max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-16'>
-                <h1 className='text-3xl font-bold text-gray-900 mb-6'>분석 중...</h1>
-                <br></br>
-                <img src='p_logo.png' className='w-1/2'></img>
+                <img src='/p_logo.png' className='w-1/2 mb-8' alt='progress' />
+                <p className='text-lg font-medium text-gray-700 mb-2'>현재 단계</p>
+                <p className='text-xl font-bold text-blue-700 mb-4'>{stage}</p>
+
+                <div className="w-3/4 max-w-md bg-gray-200 rounded-full h-6">
+                    <div
+                        className="bg-blue-500 h-6 rounded-full transition-all duration-500 ease-out"
+                        style={{ width: `${progress}%` }}
+                    />
+                </div>
+                <p className="text-sm text-gray-600 mt-2">{progress}% 완료</p>
             </main>
 
             {/* footer */}

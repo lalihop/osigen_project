@@ -84,7 +84,7 @@ function MainP() {
                         </button>
                     </div>
                     <div className='flex justify-center flex-1'>
-                        <img src='logo.png' alt='' className='h-12'></img>
+                        <img src='/logo.png' alt='' className='h-12'></img>
                     </div>
                     <div className='flex justify-end flex-1'>
                         <button 

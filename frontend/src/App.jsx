@@ -3,9 +3,8 @@ import AdminP from './AdminP'
 import GuideP from './GuideP'
 import MainP from './MainP'
 import React from 'react'
-import { Routes, Route } from 'react-router-dom'
-import QresultP from './QresultP'
-import CresultP from './CresultP'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Dashboard from "./resultDashboard/components/Dashboard";
 import ProcessingP from './ProcessingP'
 
 function App() {
@@ -15,9 +14,8 @@ function App() {
       <Route path='/' element={<MainP />} />
       <Route path='/guide' element={<GuideP />} />
       <Route path='/admin' element={<AdminP />} />
-      {/* <Route path='/result/quick' element={<QresultP />} />
-      <Route path='/result/com' element={<CresultP />} /> */}
       <Route path='/processing/:taskId' element={<ProcessingP />} />
+      <Route path='/result/:task_id' element={<Dashboard />} />
     </Routes>
   )
 }

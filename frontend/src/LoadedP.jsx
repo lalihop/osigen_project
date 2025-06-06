@@ -3,12 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import './App.css'
 import { useParams } from 'react-router-dom';
 
-function LoadedP() {
-    const { type } = useParams();
+function LoadedP({ taskId, type }) {
     const navigate = useNavigate();
 
     const gotoResult = () => {
-        {type === 'quick' ? navigate('/result/quick') : navigate('result/com')}
+        navigate(`/result/${taskId}`, {
+            state: {
+                taskId: taskId,
+                type: type
+            }
+        });
     };
 
     return (
@@ -20,7 +24,12 @@ function LoadedP() {
                     
                 </div>
                 <div className='flex justify-center flex-1'>
-                    <img src='logo.png' alt='' className='h-12'></img>
+                    <img
+                        src='/logo.png'
+                        alt='logo'
+                        className='h-12 cursor-pointer'
+                        onClick={() => navigate('/')}
+                    />
                 </div>
                 <div className='flex justify-end flex-1'>
                     
