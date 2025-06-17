@@ -14,6 +14,8 @@ from services.pdf_export import generate_pdf_report
 from pathlib import Path
 import uuid
 from services.utils.data_builder import build_structured_vuln_data
+from services.validators import filter_subdomains_async
+import traceback
 
 router = APIRouter()
 
@@ -56,7 +58,7 @@ async def analyze(request: Request, analyze_req: AnalyzeRequest):
             "result": None
         })
 
-        # ✅ 분석 유형에 따라 비동기 작업 분기
+        # 분석 유형에 따라 비동기 작업 분기
         if analyze_req.analysis_type == "full":
             asyncio.create_task(crawl_and_scan(task_id, analyze_req.domain))
         else:
@@ -65,15 +67,18 @@ async def analyze(request: Request, analyze_req: AnalyzeRequest):
         return {"status": "submitted", "task_id": task_id}
 
     except Exception as e:
+        traceback.print_exc()
         print("[분석 요청 처리 실패]", str(e))
-        raise HTTPException(status_code=500, detail="분석 요청 처리 중 오류가 발생했습니다.")
+        raise HTTPException(status_code=500, detail=f"분석 요청 처리 중 오류가 발생했습니다. {e}")
 
 
-# ✅ 통합 분석: 크롤러 + ZAP
+# 통합 분석: 크롤러 + ZAP
 async def crawl_and_scan(task_id: str, domain: str):
     try:
         result = await run_all(domain)
-        subdomains = result["subdomains"]
+        pre_subdomains = result["subdomains"]
+
+        subdomains = await filter_subdomains_async(pre_subdomains)
 
         zap_results = {}
 
@@ -95,7 +100,7 @@ async def crawl_and_scan(task_id: str, domain: str):
         )
 
 
-        # ✅ AI 요약 자동 실행
+        # AI 요약 자동 실행
         try:
             print(f"[!] 요약 시작")
             await run_ai_summary(task_id)
@@ -119,7 +124,7 @@ async def crawl_and_scan(task_id: str, domain: str):
         )
 
 
-# ✅ 빠른 분석: ZAP만 실행
+# 빠른 분석: ZAP만 실행
 async def quick_scan(task_id: str, target_url: str):
     try:
         zap_results = {}
@@ -137,7 +142,7 @@ async def quick_scan(task_id: str, target_url: str):
             }}
         )
 
-        # ✅ AI 요약 자동 실행
+        # AI 요약 자동 실행
         try:
             print(f"[!] 요약 시작")
             await run_ai_summary(task_id)
@@ -163,7 +168,7 @@ async def quick_scan(task_id: str, target_url: str):
         )
 
 
-# ✅ 상태 조회 API
+# 상태 조회 API
 @router.get("/analyze/status/{task_id}")
 async def get_status(task_id: str):
     task = await task_collection.find_one({"_id": task_id})
@@ -171,18 +176,6 @@ async def get_status(task_id: str):
         raise HTTPException(status_code=404, detail="작업을 찾을 수 없습니다.")
     return {"task_id": task_id, "status": task["status"], "progress": task.get("progress", "")}
 
-
-# ✅ 결과 조회 API
-# @router.get("/analyze/result/{task_id}")
-# async def get_result(task_id: str):
-#     task = await task_collection.find_one({"_id": task_id})
-#     if not task:
-#         raise HTTPException(status_code=404, detail="작업을 찾을 수 없습니다.")
-
-#     if task["status"] != "done":
-#         return {"status": "processing", "message": "분석이 아직 완료되지 않았습니다."}
-
-#     return {"status": "done", "type": task["type"], "result": task["result"], "ai_summary_id": task["ai_summary_id"]}
 @router.get("/analyze/result/{task_id}")
 async def get_result(task_id: str):
     task = await task_collection.find_one({"_id": task_id})
@@ -192,7 +185,7 @@ async def get_result(task_id: str):
     if task["status"] != "done":
         return {"status": "processing", "message": "분석이 아직 완료되지 않았습니다."}
 
-    # ✅ 통합 구조화 함수 호출
+    # 통합 구조화 함수 호출
     structured_data = await build_structured_vuln_data(task_id)
     return {"status": "done", "result": structured_data}
 
@@ -230,7 +223,7 @@ async def export_pdf(task_id: str):
     if task["status"] != "done":
         raise HTTPException(status_code=400, detail="분석이 아직 완료되지 않았습니다.")
 
-    # ✅ 구조화된 데이터 생성
+    # 구조화된 데이터 생성
     data = await build_structured_vuln_data(task_id)
 
     raw_target = task.get("target") or task.get("primary_url") or task.get("domain") or "unknown"

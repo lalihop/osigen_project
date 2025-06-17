@@ -1,4 +1,3 @@
-# dnssearch.py
 import socket
 import asyncio
 import random

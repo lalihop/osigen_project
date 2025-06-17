@@ -7,7 +7,7 @@ from typing import Optional, List, Dict
 import google.generativeai as genai
 
 # Gemini 설정 (환경 변수에서 API 키 로딩 권장)
-genai.configure(api_key=os.getenv("GEMINI_API_KEY", "AIzaSyCzFOVfhtmhkITu103X6aotOF1pRWeaUFs"))
+genai.configure(api_key=os.getenv("GEMINI_API_KEY", "*"))
 model = genai.GenerativeModel("gemini-2.0-flash")
 
 

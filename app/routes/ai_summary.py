@@ -35,12 +35,3 @@ async def get_ai_summary(ai_summary_id: str):
         "prompt_examples": doc.get("prompt_examples", []),
         "created_at": doc.get("created_at")
     }
-
-
-# @router.post("/ai/resummarize/{task_id}")
-# async def resummarize_ai_result(task_id: str):
-#     """
-#     기존 Gemini 요약 삭제 후 재요약
-#     """
-#     await ai_collection.delete_many({"task_id": task_id})
-#     return await summarize_ai_result(task_id)

@@ -1,4 +1,6 @@
 import requests
+import aiohttp
+import asyncio
 
 # 시도할 URL 조합 (우선순위 있음)
 PREFIXES = ["https://", "https://www.", "http://", "http://www."]
@@ -95,18 +97,26 @@ def determine_primary_url(domain: str) -> dict:
         "attempts": attempts
     }
 
-# if __name__ == "__main__":
-#     domain = input("검사할 도메인을 입력하세요 (예: google.com): ").strip()
-#     result = determine_primary_url(domain)
+# 비동기 요청 함수 추가
+async def async_try_request(url: str, timeout: int = 5) -> tuple[str, bool]:
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, timeout=timeout) as resp:
+                return url, resp.status < 500
+    except Exception:
+        return url, False
 
-#     print("\n🎯 대표 주소:")
-#     print(result["primary_url"])
+async def filter_subdomains_async(subdomain_list: list) -> list:
+    urls = [f"http://{sub}" for sub in subdomain_list]
 
-#     print("\n📋 시도한 조합별 결과:")
-#     for attempt in result["attempts"]:
-#         print(f"- URL: {attempt['url']}")
-#         print(f"  🔹 Alive: {attempt['alive']}")
-#         print(f"  🔹 Status Code: {attempt['status_code']}")
-#         print(f"  🔹 Redirect To: {attempt['redirect_to']}")
-#         print(f"  🔹 Error: {attempt['error']}")
-#         print("")
+    results = await asyncio.gather(
+        *[async_try_request(url) for url in urls],
+        return_exceptions=True
+    )
+
+    valid_subs = []
+    for i, result in enumerate(results):
+        if isinstance(result, tuple) and result[1]:  # (url, alive)
+            valid_subs.append(subdomain_list[i])
+
+    return valid_subs

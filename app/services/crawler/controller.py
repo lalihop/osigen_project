@@ -49,7 +49,7 @@ async def run_all(domain):
     except Exception as e:
         print(f"[!] DNS 브루트포스 실패: {e}")
 
-    print(f"\n[✅] 서브 도메인 수집 완료!")
+    print(f"\n[v] 서브 도메인 수집 완료!")
 
     # 필터링 적용
     filtered = [s for s in all_subdomains if is_valid_subdomain(s, domain)]

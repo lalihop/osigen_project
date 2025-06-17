@@ -1,4 +1,4 @@
-# zap_scan.py
+from fastapi import HTTPException
 import sys
 import os
 import time
@@ -26,7 +26,12 @@ async def run_zap_scan(target: str, task_id: str = None) -> list:
     clean_target = target.replace("http://", "").replace("https://", "").replace("/", "")
     print(f"[*] 대상 URL: {target}")
 
-    zap.urlopen(target)
+    # 디버깅용
+    try:
+        zap.urlopen(target)
+    except Exception as e:
+        print(f"[X] zap.urlopen 실패: {e}")
+        raise HTTPException(status_code=500, detail="ZAP이 준비 안됐거나 세션 오류 발생")
     time.sleep(2)
 
     print("[*] Spider 시작")

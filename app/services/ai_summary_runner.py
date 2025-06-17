@@ -1,4 +1,3 @@
-# services/ai_summary_runner.py
 from database import task_collection, ai_collection
 from services.gemini.summarizer import summarize_zap_report
 from datetime import datetime

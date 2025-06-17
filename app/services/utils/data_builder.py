@@ -6,14 +6,14 @@ from collections import Counter
 from urllib.parse import urlparse
 from collections import defaultdict
 
-# 🧩 가이드라인 JSON 로딩
+# 가이드라인 JSON 로딩
 GUIDELINE_PATH = Path("static/guideline.json")  # 실제 위치에 따라 수정
 with open(GUIDELINE_PATH, "r", encoding="utf-8") as f:
     GUIDELINES = json.load(f)
 
 
 async def build_structured_vuln_data(task_id: str) -> dict:
-    # ✅ 데이터베이스 조회
+    # 데이터베이스 조회
     task = await task_collection.find_one({"_id": task_id})
     if not task:
         raise ValueError("task를 찾을 수 없습니다.")
@@ -31,10 +31,13 @@ async def build_structured_vuln_data(task_id: str) -> dict:
         if isinstance(issue_list, list):
             zap_details.extend(issue_list)
 
-    subdomains = task.get("result", {}).get("subdomains", [])
-    target = task.get("primary_url") or task.get("domain") or ""
+    if task.get("type", "unknown") == "full":
+        subdomains = task.get("result", {}).get("crawler", []).get("subdomains", [])
+    else:
+        subdomains = []
+    target = task.get("domain") or ""
 
-    # 🧠 상세 정보 구성
+    # 상세 정보 구성
     structured_details = []
 
     for item in zap_details:
@@ -61,7 +64,7 @@ async def build_structured_vuln_data(task_id: str) -> dict:
             "examples": examples,
         })
 
-        # 🧩 서브도메인별 취약점 목록 구성
+        # 서브도메인별 취약점 목록 구성
         subdomain_map = defaultdict(list)
 
         for item in structured_details:
@@ -83,10 +86,10 @@ async def build_structured_vuln_data(task_id: str) -> dict:
         ]
 
 
-    # 1️⃣ 심각도별 통계
+    # 심각도별 통계
     severity_counter = Counter(item.get("risk", "Unknown") for item in structured_details)
 
-    # 2️⃣ 취약점 이름별 통계
+    # 취약점 이름별 통계
     vuln_name_counter = Counter(item.get("translated", item.get("name", "Unknown")) for item in structured_details)
 
     # top 5만 추출
@@ -95,7 +98,7 @@ async def build_structured_vuln_data(task_id: str) -> dict:
     # details 기반으로 자동 집계
     severity_counts = dict(Counter(item.get("risk", "Unknown") for item in structured_details))
 
-    # 📦 전체 데이터 구성
+    # 전체 데이터 구성
     structured_data = {
         "target": target,
         "created_at": task.get("created_at", datetime.utcnow()).strftime("%Y-%m-%d %H:%M"),
