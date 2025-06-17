@@ -23,7 +23,6 @@ function LoadingP({ progress = 0, stage = "분석 준비 중..."}) {
 
             {/* main */}
             <main className='flex-grow flex flex-col items-center max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-16'>
-                <img src='/p_logo.png' className='w-1/2 mb-8' alt='progress' />
                 <p className='text-lg font-medium text-gray-700 mb-2'>현재 단계</p>
                 <p className='text-xl font-bold text-blue-700 mb-4'>{stage}</p>
 

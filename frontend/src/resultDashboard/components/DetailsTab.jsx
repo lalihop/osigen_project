@@ -1,10 +1,8 @@
-// 📍 src/resultDashboard/components/DetailsTab.jsx
-
 import React, { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-// ✅ '**텍스트**' 강조 표현 파싱 함수
+// '**텍스트**' 강조 표현 파싱 함수
 const renderWithEmphasis = (text) => {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
   return parts.map((part, i) => {
@@ -36,7 +34,7 @@ const DetailsTab = ({ data }) => {
 
   return (
     <div className="space-y-6">
-      {/* ✅ 필터 */}
+      {/* 필터 */}
       <div className="flex flex-col md:flex-row md:items-center gap-4">
         <input
           type="text"
@@ -58,7 +56,7 @@ const DetailsTab = ({ data }) => {
         </select>
       </div>
 
-      {/* ✅ 테이블 */}
+      {/* 테이블 */}
       <div className="overflow-x-auto">
         <table className="w-full border border-gray-300 text-sm">
           <thead className="bg-gray-100">
@@ -91,7 +89,7 @@ const DetailsTab = ({ data }) => {
         </table>
       </div>
 
-      {/* ✅ 상세 모달 */}
+      {/* 상세 모달 */}
       {selected && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded shadow-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
@@ -128,7 +126,7 @@ const DetailsTab = ({ data }) => {
                   </ul>
                 </div>
               )}
-              {/* ✅ 예시 코드들 */}
+              {/* 예시 코드들 */}
               {selected.examples &&
                 Object.entries(selected.examples).map(([key, value]) => (
                   <div key={key}>

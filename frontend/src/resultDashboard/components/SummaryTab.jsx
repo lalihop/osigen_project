@@ -41,7 +41,7 @@ const SummaryTab = ({ data }) => {
 
   const TYPE_COLORS = ["#6366F1", "#10B981", "#F59E0B", "#EC4899", "#3B82F6"];
 
-  // ✅ 도메인별 취약점 수 계산
+  // 도메인별 취약점 수 계산
   const domainCountMap = {};
   allAlerts.forEach((alert) => {
     try {

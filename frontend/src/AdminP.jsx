@@ -1,5 +1,3 @@
-// 📍 src/pages/AdminP.jsx (대시보드 + 헤더/푸터/로그아웃 포함)
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -61,7 +59,7 @@ const AdminP = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* ✅ 헤더 */}
+      {/* 헤더 */}
       <header className='w-full py-4 bg-white shadow-sm'>
         <div className='max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center'>
           <div className='flex-1'>
@@ -184,7 +182,7 @@ const AdminP = () => {
         </div>
       </main>
 
-      {/* ✅ 푸터 */}
+      {/* 푸터 */}
       <footer className='w-full py-6 bg-white border-t border-gray-200'>
         <div className='max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600'>
           © 2025 OSIGEN Scanner. All rights reserved.

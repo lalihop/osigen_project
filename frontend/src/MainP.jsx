@@ -121,6 +121,7 @@ function MainP() {
                                 {active === 'quick'
                                     ? '입력하신 도메인에 대하여 분석을 수행합니다.'
                                     : '입력하신 도메인과 서브도메인에 대하여 분석을 수행합니다.'}
+                                <p className='text-red-500 opacity-70'>"자신의 도메인만 탐지할 것을 권고합니다."</p>
                             </div>
                         )}
 

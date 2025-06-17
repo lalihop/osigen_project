@@ -28,7 +28,6 @@ function FailedP({ taskId, message }) {
             <main className='flex-grow flex flex-col items-center max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-16'>
                 <h1 className='text-3xl font-bold text-gray-900 mb-6'>분석 실패.</h1>
                 <p className='text-gray-700 mb-4'>{message}</p>
-                <img src='/p_logo.png' className='w-1/2'></img>
             </main>
 
             {/* footer */}

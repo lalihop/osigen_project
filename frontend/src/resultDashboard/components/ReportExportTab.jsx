@@ -22,7 +22,7 @@ const ReportExportTab = ({ data }) => {
 
   return (
     <div className="space-y-10">
-      {/* ✅ PDF 다운로드 섹션 */}
+      {/* PDF 다운로드 섹션 */}
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">📄 OSIGEN 보고서 저장</h3>
         <p className="text-sm text-gray-600">
@@ -52,7 +52,7 @@ const ReportExportTab = ({ data }) => {
         </button>
       </div>
 
-      {/* ✅ JSON 다운로드 섹션 */}
+      {/* JSON 다운로드 섹션 */}
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">📄 ZAP 원본 JSON 저장</h3>
         <p className="text-sm text-gray-600">

@@ -1,12 +1,10 @@
-// 📍 src/resultDashboard/components/SubdomainTab.jsx
-
 import React, { useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
 const SubdomainTab = ({ data }) => {
   const details = data?.details || [];
 
-  // 🧩 URL → 도메인 추출
+  // URL → 도메인 추출
   const extractDomain = (url) => {
     try {
       return new URL(url).hostname;
@@ -15,10 +13,10 @@ const SubdomainTab = ({ data }) => {
     }
   };
 
-  // 🧠 위험도 → 점수 부여 기준
+  // 위험도 → 점수 부여 기준
   const riskScores = { Critical: 4, High: 3, Medium: 2, Low: 1 };
 
-  // 🧩 도메인별 취약점 그룹화 및 통계
+  // 도메인별 취약점 그룹화 및 통계
   const domainStatsMap = {};
   details.forEach((item) => {
     const domain = extractDomain(item.url);
@@ -69,7 +67,7 @@ const SubdomainTab = ({ data }) => {
 
   return (
     <div className="space-y-6">
-      {/* ✅ 카드형 서브도메인 리스트 */}
+      {/* 카드형 서브도메인 리스트 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {domainStats.map((d, i) => (
           <div
@@ -89,7 +87,7 @@ const SubdomainTab = ({ data }) => {
         ))}
       </div>
 
-      {/* ✅ 상세 모달 */}
+      {/* 상세 모달 */}
       {selected && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded shadow-lg max-w-2xl w-full">
@@ -146,7 +144,7 @@ const SubdomainTab = ({ data }) => {
         </div>
       )}
 
-      {/* ✅ 위험도 점수 기반 랭킹 차트 */}
+      {/* 위험도 점수 기반 랭킹 차트 */}
       <div className="mt-6 p-4 bg-gray-100 rounded">
         <h3 className="text-center font-semibold mb-2">서브도메인 위험도 점수 랭킹</h3>
         <ResponsiveContainer width="100%" height={300}>

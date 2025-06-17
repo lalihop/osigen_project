@@ -10,7 +10,7 @@ const AiSummaryTab = ({ data }) => {
 
   return (
     <div className="space-y-10">
-      {/* ✅ 주요 취약점 요약 */}
+      {/* 주요 취약점 요약 */}
       {summaryList.length > 0 && (
         <div>
           <h3 className="text-xl font-semibold mb-4">📌 주요 취약점 요약</h3>
@@ -36,7 +36,7 @@ const AiSummaryTab = ({ data }) => {
         </div>
       )}
 
-      {/* ✅ 질문 예시 */}
+      {/* 질문 예시 */}
       {promptExamples.length > 0 && (
         <div>
           <h3 className="text-xl font-semibold mb-4">💬 AI에게 물어볼 수 있는 질문 예시</h3>

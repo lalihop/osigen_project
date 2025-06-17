@@ -39,14 +39,10 @@ function GuideP() {
                         <li>결과는 분석 완료 후 결과 페이지에서 확인할 수 있습니다.</li>
                     </ul>
                 </section>
-
+                
                 <section>
-                    <h2 className="text-2xl font-bold mb-4">💥 오류 코드</h2>
-                    <ul className="list-disc ml-6 space-y-2 text-gray-700">
-                        <li>오류 코드 <strong>1.1</strong>: 유효하지 않은 도메인</li>
-                        <li>오류 코드 <strong>1.2</strong>: 도메인 형식 오류</li>
-                        <li>오류 코드 <strong>1.3</strong>: 접근할 수 없는 웹 서버</li>
-                    </ul>
+                    <h2 className='text-2xl font-bold mb-4'>🚨 경고 사항</h2>
+                    <p className='text-red-500 font-bold'>❗자신의 도메인만 탐지할 것을 권고합니다.❗</p>
                 </section>
 
                 <section>
