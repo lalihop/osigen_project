@@ -7,7 +7,7 @@ from zapv2 import ZAPv2
 from database import task_collection
 
 # --- 설정 ---
-ZAP_API_KEY = "changeme"  # docker-compose에서 설정한 키와 동일하게
+ZAP_API_KEY = "*"
 ZAP_ADDRESS = "localhost"
 ZAP_PORT = 8080
 
