@@ -64,11 +64,3 @@ async def run_all(domain):
             f.write(sub + "\n")
 
     return {"subdomains": filtered}
-
-if __name__ == "__main__":
-    import sys
-    if len(sys.argv) < 2:
-        print("사용법: python main.py example.com")
-        exit()
-    target_domain = sys.argv[1]
-    asyncio.run(run_all(target_domain))

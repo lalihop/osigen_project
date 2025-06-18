@@ -9,6 +9,6 @@ services:
       - "C:/zap_scanner/reports:/zap/reports"
     command: >
       zap.sh -daemon -host 0.0.0.0 -port 8080
-      -config api.key=changeme
+      -config api.key=*
       -config api.addrs.addr.name=.*
       -config api.addrs.addr.regex=true

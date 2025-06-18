@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from collections import defaultdict
 
 # 가이드라인 JSON 로딩
-GUIDELINE_PATH = Path("static/guideline.json")  # 실제 위치에 따라 수정
+GUIDELINE_PATH = Path("static/guideline.json")
 with open(GUIDELINE_PATH, "r", encoding="utf-8") as f:
     GUIDELINES = json.load(f)
 
